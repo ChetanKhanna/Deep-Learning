@@ -28,6 +28,8 @@ class Linear_Regression(nn.Module):
 # 2. Instantiating model
 input_dim, output_dim = 1, 1
 model = Linear_Regression(input_dim, output_dim)
+if torch.cuda.is_available():
+    model.cuda()
 # 3. instantiate loss class
 loss_func = nn.MSELoss()
 # 4. instantiate optimizer class
@@ -35,8 +37,12 @@ lr = 0.006
 optimizer = torch.optim.SGD(model.parameters(), lr=lr)
 # 5. training model
 epochs = 1000
-X = Variable(torch.from_numpy(X), requires_grad=True)
-y = Variable(torch.from_numpy(y), requires_grad=True)
+if torch.cuda.is_available():
+    X = Variable(torch.from_numpy(X).cuda(), requires_grad=True)
+    y = Variable(torch.from_numpy(y).cuda(), requires_grad=True)
+else:
+    X = Variable(torch.from_numpy(X), requires_grad=True)
+    y = Variable(torch.from_numpy(y), requires_grad=True)
 for epoch in range(epochs):
     optimizer.zero_grad()
     y_predict = model(X)
