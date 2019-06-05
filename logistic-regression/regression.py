@@ -34,6 +34,9 @@ class logistic_regression_model(nn.Module):
 # Instantiate model
 input_dim, output_dim = 28*28, 10
 model = logistic_regression_model(input_dim, output_dim)
+# Bring model to gpu
+if torch.cuda.is_available():
+	model.cuda()
 # Instantiate loss func
 loss_func = nn.CrossEntropyLoss()
 # Instantiate optimizer
@@ -45,8 +48,13 @@ iter_ = 0
 for epoch in range(num_epochs):
 	for i, (images, labels) in enumerate(train_loader):
 		# Making torch Variable
-		images = Variable(images.view(-1, 28*28))
-		labels = Variable(labels)
+		if torch.cuda.is_available():
+			# Bring variables to gpu
+			images = Variable(images.view(-1, 28*28).cuda())
+			labels = Variable(labels.cuda())
+		else:
+			images = Variable(images.view(-1, 28*28))
+			labels = Variable(labels)
 		# Clearing grads
 		optimizer.zero_grad()
 		# Forward pass
@@ -63,10 +71,16 @@ for epoch in range(num_epochs):
 			correct, total = 0, 0
 			# Going through the test set
 			for images, labels in test_loader:
-				images = Variable(images.view(-1 , 28*28))
+				if torch.cuda.is_available():
+					# Bring images to gpu
+					images = Variable(images.view(-1 , 28*28).cuda())
+				else:
+					images = Variable(images.view(-1 , 28*28))
 				labels_predict = model(images)
 				_, predicted = torch.max(labels_predict.data, 1)
 				total += labels.size(0)
-				correct += (predicted == labels).sum()
+				# Bring variables to cpu for using python
+				# function 'sum'
+				correct += (predicted.cpu() == labels.cpu()).sum()
 			accuracy = 100 * correct / total
 			print('Iter:', iter_, 'loss:', loss.data, 'accuracy:', accuracy)
