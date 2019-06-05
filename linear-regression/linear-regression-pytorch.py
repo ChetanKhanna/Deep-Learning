@@ -13,7 +13,6 @@ X, y = np.loadtxt(fname, delimiter=',', unpack=True, dtype=np.float32)
 X = X.reshape(-1, 1)
 y = y.reshape(-1, 1)
 
-
 # 1. Making model class
 class Linear_Regression(nn.Module):
 
@@ -49,5 +48,4 @@ for epoch in range(epochs):
     loss = loss_func(y_predict, y)
     loss.backward()
     optimizer.step()
-    epoch += 1
     print('epoch:', epoch, 'loss:', loss.data)
