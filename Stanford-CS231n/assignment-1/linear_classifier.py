@@ -7,7 +7,7 @@ class LinearClassifier():
     def __init__(self):
         self.weights = None
 
-    def train(self, X, y, learning_rate=1e-3, reg=1e-5, num_iters=100,
+    def train(self, X, y, learning_rate=0.001, reg=1e-5, num_iters=10000,
               batch_size=200, verbose=False):
         num_train, dim = X.shape
         num_labels = np.max(y) + 1
@@ -19,7 +19,7 @@ class LinearClassifier():
             X_batch = None
             y_batch = None
             # making batches
-            indices = np.random.choice(num_train, batch_size, replacement=True)
+            indices = np.random.choice(num_train, batch_size, replace=True)
             X_batch = X[indices, :]
             y_batch = y[indices,]
             # getting loss and gradient from loss function
@@ -56,9 +56,17 @@ class LinearSVM(LinearClassifier):
         correct_class_scores = np.choose(y.T, f.T).reshape(X.shape[0], 1)
         margin = np.maximum(0, f - correct_class_scores + 1)
         margin[range(margin.shape[0]), y.T] = 0
+        margin[np.arange(X.shape[0]), y] = 0
         loss = margin.sum() / X.shape[0]
         # regularizing
-        loss += reg * np.sum(self.weights * self.weights)
+        loss += 0.5 * reg * np.sum(self.weights * self.weights)
         # calculating the new gradients
         dW = np.zeros(self.weights.shape)
-        
+        margin[margin > 0] = 1
+        row_sum = np.sum(margin, axis=1)
+        margin[range(margin.shape[0]), y.T] = -row_sum.T
+        dW = np.dot(X.T, margin)
+        dW /= margin.shape[0]
+        dW += reg*self.weights
+        # return
+        return loss, dW
