@@ -50,14 +50,15 @@ class LinearClassifier():
 
 class LinearSVM(LinearClassifier):
 
-    def loss(self, X_batch, y_batch, reg):
+    def loss(self, X, y, reg):
         # getting the score matrix
-        f = X_batch.dot(self.weights)
-        correct_class_scores = np.choose(y_batch.T, f.T).reshape(X_batch.shape[0], 1)
+        f = X.dot(self.weights)
+        correct_class_scores = np.choose(y.T, f.T).reshape(X.shape[0], 1)
         margin = np.maximum(0, f - correct_class_scores + 1)
-        margin[range(margin.shape[0]), y_batch.T] = 0
-        loss = margin.sum() / X_batch.shape[0]
+        margin[range(margin.shape[0]), y.T] = 0
+        loss = margin.sum() / X.shape[0]
         # regularizing
         loss += reg * np.sum(self.weights * self.weights)
         # calculating the new gradients
+        dW = np.zeros(self.weights.shape)
         
