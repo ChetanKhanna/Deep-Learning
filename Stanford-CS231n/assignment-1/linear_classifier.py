@@ -52,7 +52,10 @@ class LinearSVM(LinearClassifier):
 
     def loss(self, X, y, reg):
         # getting the score matrix
+        loss = 0.0
+        dW = np.zeros(self.weights.shape)
         f = X.dot(self.weights)
+        f -= np.max(f, axis=1, keepdims=True)
         correct_class_scores = np.choose(y.T, f.T).reshape(X.shape[0], 1)
         margin = np.maximum(0, f - correct_class_scores + 1)
         margin[range(margin.shape[0]), y.T] = 0
@@ -67,6 +70,30 @@ class LinearSVM(LinearClassifier):
         margin[range(margin.shape[0]), y.T] = -row_sum.T
         dW = np.dot(X.T, margin)
         dW /= margin.shape[0]
+        dW += reg*self.weights
+        # return
+        return loss, dW
+
+
+class SoftmaxClassifier(LinearClassifier):
+
+    def loss(self, X, y, reg):
+        loss = 0.0
+        dW = np.zeros(self.weights.shape)
+        # getting loss
+        f = X.dot(self.weights) # scores
+        f -= np.max(f, axis=1, keepdims=True)
+        f_exp_sum = np.exp(f).sum(axis=1, keepdims=True)
+        f_softmax = np.exp(f)/f_exp_sum
+        loss = np.sum(-np.log(f_softmax[range(X.shape[0]), y]))
+        loss /= X.shape[0]
+        # _ = input(loss)
+        # getting weights
+        f_softmax[range(X.shape[0]), y] -= 1
+        dW = X.T.dot(f_softmax)
+        dW /= X.shape[0]
+        # regularization
+        loss += 0.5 * reg * np.sum(self.weights * self.weights)
         dW += reg*self.weights
         # return
         return loss, dW

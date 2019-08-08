@@ -3,7 +3,7 @@ import os
 import matplotlib.pyplot as plt
 import pickle
 from linear_classifier import LinearSVM
-from sklearn.svm import LinearSVC
+from linear_classifier import SoftmaxClassifier
 from sklearn.metrics import accuracy_score
 
 # dataset loading and required functions
@@ -49,12 +49,13 @@ print(train_data.shape)
 print(train_labels.shape)
 print(test_data.shape)
 print(test_labels.shape)
-# model training
+# training LinearSVM model
 model = LinearSVM()
 model.train(train_data, train_labels, verbose=True)
 pred = model.predict(test_data)
 print(accuracy_score(test_labels, pred))
-# model = LinearSVC()
-# model.fit(train_data, train_labels)
-# pred = model.predict(test_data)
-# print(accuracy_score(test_labels, pred))
+# training softmax model
+model = SoftmaxClassifier()
+model.train(train_data, train_labels, verbose=True)
+pred = model.predict(test_data)
+print(accuracy_score(test_labels, pred))
