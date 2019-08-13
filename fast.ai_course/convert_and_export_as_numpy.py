@@ -50,6 +50,13 @@ labels = np.array(labels)
 # converting dataset to 2D array
 dataset = dataset.reshape((dataset.shape[0], HEIGHT*WIDTH*3))
 print(dataset.shape)
-np.save(PATH, dataset)
-dr = np.load(PATH)
+SAVE_PATH = os.path.join(os.path.expanduser('~'), 'Deep-Learning', 'data',
+						 'numpy_arrays', label+'.npy')
+np.save(SAVE_PATH, dataset)
+dr = np.load(SAVE_PATH)
+print(dr.shape)
+SAVE_PATH = os.path.join(os.path.expanduser('~'), 'Deep-Learning', 'data',
+						 'numpy_arrays', label+'_labels.npy')
+np.save(SAVE_PATH, labels)
+dr = np.load(SAVE_PATH)
 print(dr.shape)
