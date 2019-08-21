@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Green Apple</title>
+</head>
+<style type="text/css">
+	button {
+		background-color: #4CAF50;
+		border: none;
+		color: white;
+		padding: 15px 32px;
+		text-align: center;
+		text-decoration: none;
+		display: inline-flex;
+		font-size: 16px;
+		margin: 4px 2px;
+		cursor: pointer;
+		margin: auto;
+		display: block;
+
+	}
+</style>
+<style type="text/css">
+	p, ul {
+		font-family: verdana;
+		font-size: 150%;
+		color: white;
+		text-align: center;
+	}
+</style>
+<body background="{% static 'clf/Images/background3.jpeg' %}">
+	<form method="post" enctype="multipart/form-data" class="submit">
+		{% csrf_token %}
+		{{ form.as_p }}
+		<button type="submit" class="button">Upload</button>
+	</form>
+	<p>
+		Press the upload button to upload your picture 
+	</p>
+	<p>
+		Currently supported classes:
+		<ul>
+			<li>Green Apple</li>
+			<li>Pear</li>
+			<li>Guava</li>
+		</ul>
+	</p>
+</body>
+</html>
