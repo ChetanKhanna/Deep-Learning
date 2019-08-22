@@ -25,8 +25,7 @@ async def get_bytes_from_url(url):
 # function to classify image from image passes as bytes
 def predict_image_from_bytes(bytes_):
     img = open_image(BytesIO(bytes_))
-    predict_class, predict_idx, output = model.predict(img)
-    dict_ = dict(zip(classes, output))
+    _, _, output = model.predict(img)
     return JSONResponse({
         "predictions": sorted(
             zip(classes, map(float, output)),
