@@ -26,8 +26,12 @@ async def get_bytes_from_url(url):
 def predict_image_from_bytes(bytes_):
     img = open_image(BytesIO(bytes_))
     predict_class, predict_idx, output = model.predict(img)
+    dict_ = dict(zip(classes, output))
     return JSONResponse({
-        'predictions': dict(zip(classes, output))
+        "predictions": sorted(
+            zip(classes, map(float, output)),
+            key=lambda p: p[1],
+            reverse=True)
         })
 
 # upload-image function
@@ -49,16 +53,16 @@ def home(request):
     return HTMLResponse("""
         <h3>This app classifies fruits into Green-Apple, Guava or Pear</h3>
 
-        <form action="/upload" methos="post" enctype="multipart/form-data">
+        <form action="/upload" method="post" enctype="multipart/form-data">
             Select image to upload:
             <input type="file" name="file">
-            <input type="submit" value="Upload image">
+            <input type="submit" value="Upload Image">
         </form>
 
         <form action=/classify-url" method="get">
             Or submit a URL:
             <input type="url" name="url">
-            <input type="submit" value="fetch Image">
+            <input type="submit" value="Fetch Image">
         </form>
         """)
 
