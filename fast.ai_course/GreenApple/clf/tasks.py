@@ -12,4 +12,4 @@ def predict(img_path):
 	print(img_path)
 	pred_class, pred_idx, outputs = learn.predict(img)
 	print(pred_class)
-	return pred_class
+	return outputs

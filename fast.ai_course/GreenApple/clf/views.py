@@ -44,10 +44,14 @@ class RunAnalysisView(generic.TemplateView):
         IMAGE_PATH = str(self.context['abs_img_path'])
         return render(request, self.template_name, self.context)
 
-def PredictResult(self):
+def PredictResult(request):
     # print(self.context)
+    global IMAGE_PATH
+    img_path = os.path.join(MEDIA_URL, 'clf', 'Images',
+                            os.path.basename(IMAGE_PATH))
     prediction = predict(IMAGE_PATH)
-    return HttpResponse(prediction)
-    # prediction = predict('/home/chetan/Downloads/GA.jpeg')
-    # print(prediction)
-    # return HttpResponse(prediction)
+    classes = ['green-apple', 'guava', 'pear']
+    dict_ = dict(zip(classes, prediction))
+    print(dict_)
+    return render(request, 'clf/results.html', {'results': dict_,
+                  'img_path': img_path})
