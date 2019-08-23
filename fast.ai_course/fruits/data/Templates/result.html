@@ -1,0 +1,33 @@
+<style type="text/css">
+    body {
+        background-color: teal;
+    }
+    tr, td {
+
+    	border: 1px solid black;
+    }
+    table {
+    	width: 70%;
+    	margin-left: 15%;
+    	margin-right: 15%;
+    } 
+</style>
+
+<body>
+	<table>
+		<th>Name</th>
+		<th>Confidence</th>
+		<tr>
+			<td> {{ prediction[0][0] }} </td>
+			<td> {{ prediction[0][1] }} </td>
+		</tr>
+		<tr>
+			<td> {{ prediction[1][0] }} </td>
+			<td> {{ prediction[1][1] }} </td>
+		</tr>
+		<tr>
+			<td> {{ prediction[2][0] }} </td>
+			<td> {{ prediction[2][1] }} </td>
+		</tr>
+	</table>
+</body>
