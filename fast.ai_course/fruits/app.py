@@ -7,9 +7,8 @@ from io import BytesIO
 import sys
 import uvicorn
 import aiohttp
-import asyncio
+#import asyncio
 import os
-
 
 app = Starlette() # instantiating Starlette app
 
